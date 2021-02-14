@@ -1,2 +1,2 @@
 # kubernetes
-Kubernetes Practice
+Kubernetes Practice and docs
