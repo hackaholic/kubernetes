@@ -1,0 +1,87 @@
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: zookeeper
+  labels:
+    service: zookeeper
+  namespace: test
+spec:
+  selector:
+    app: zookeeper
+  clusterIP: None
+  ports:
+    - name: client
+      protocol: TCP
+      port: 2181
+      targetPort: 2181
+    - name: server
+      protocol: TCP
+      port: 3888
+      targetPort: 3888
+    - name: election
+      protocol: TCP
+      port: 2888
+      targetPort: 2888
+
+---
+
+apiVersion: apps/v1
+kind: StatefulSet 
+metadata:
+  name: zookeeper
+  labels:
+     app: zookeeper
+  namespace: test
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: zookeeper
+  serviceName: zookeeper
+  template:
+    metadata:
+      labels:
+        app: zookeeper
+    spec:
+      hostname: zookeeper
+      containers:
+      - name: zookeeper
+        image: 10.60.174.46:5000/kubernetes_zookeeper:latest 
+        imagePullPolicy: Always
+        #command: ["sleep", "100000000000"]
+        ports:
+        - name: client
+          containerPort: 2181
+          protocol: TCP
+        - name: server
+          containerPort: 3888
+          protocol: TCP
+        - name: election
+          containerPort: 2888
+          protocol: TCP
+        env:
+        - name: "ZOO_SERVERS"
+          value: "server.1=zookeeper-0.zookeeper.test.svc.cluster.local:2888:3888;2181 server.2=zookeeper-1.zookeeper.test.svc.cluster.local:2888:3888;2181"
+        #readinessProbe:
+        #  tcpSocket:
+        #    port: client
+        #  initialDelaySeconds: 20
+        #  periodSeconds: 20
+        #livenessProbe:
+        #  tcpSocket:
+        #    port: client
+        #  initialDelaySeconds: 20
+        #  periodSeconds: 20
+
+        volumeMounts:
+        - mountPath: /opt/zookeeper-3.4.13/data
+          name: data
+
+      volumes:
+      - name: data
+        hostPath:
+        #Ensure the file directory is created.
+          path: /pw/data/zookeeper
+          type: DirectoryOrCreate

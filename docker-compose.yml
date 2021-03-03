@@ -1,0 +1,22 @@
+version: '3.8'
+services:
+  clickhouse:
+    build:
+      context: ./apps/clickhouse
+      dockerfile: Dockerfile
+    container_name: clickhouse
+    ports:
+      - 8123:8123
+      - 9000:9000
+    user: root:root
+
+  zookeeper:
+    build:
+      context: ./apps/zookeeper
+      dockerfile: Dockerfile
+    container_name: zookeeper-0
+    hostname: zookeeper-0
+    command: /script/init.sh
+    ports:
+      - 2181:2181
+    user: root:root  
