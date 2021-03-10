@@ -1,0 +1,102 @@
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: clickhouse
+  labels:
+    service: clickhouse
+  namespace: test
+spec:
+  selector:
+    app: clickhouse
+  clusterIP: None
+  ports:
+    - name: http-client
+      protocol: TCP
+      port: 8123
+      targetPort: 8123
+    - name: tcp-client
+      protocol: TCP
+      port: 9000
+      targetPort: 9000
+    - name: replica
+      protocol: TCP
+      port: 9009
+      targetPort: 9009
+
+---
+
+apiVersion: apps/v1
+kind: StatefulSet 
+metadata:
+  name: clickhouse
+  labels:
+     app: clickhouse
+  namespace: test
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: clickhouse
+  serviceName: clickhouse
+  template:
+    metadata:
+      labels:
+        app: clickhouse
+    spec:
+      hostname: clickhouse
+      containers:
+      - name: clickhouse
+        image: 10.60.174.184:5000/kubernetes_clickhouse:latest 
+        imagePullPolicy: Always
+        #command: ["sleep", "100000000000"]
+        ports:
+        - name: http-client
+          containerPort: 8123
+          protocol: TCP
+        - name: tcp-client
+          containerPort: 9000
+          protocol: TCP
+        - name: replica
+          containerPort: 9009
+          protocol: TCP
+        #startupProbe:
+        #  tcpSocket:
+        #    port: http-client
+        #  failureThreshold: 50
+        #  initialDelaySeconds: 20
+        #  periodSeconds: 20
+        #livenessProbe:
+        #  tcpSocket:
+        #    port: http-client
+        #  initialDelaySeconds: 20
+        #  periodSeconds: 20
+        volumeMounts:
+        #- mountPath: /opt/clickhouse-3.4.13/data
+        #  name: data
+        - name: zookeeper
+          mountPath: /etc/clickhouse-server/config.d/zookeeper.xml
+          subPath: zookeeper.xml
+        - name: shard
+          mountPath: /etc/clickhouse-server/config.d/shard.xml
+          subPath: shard.xml
+
+      volumes:
+      #- name: data
+      #  hostPath:
+      #  #Ensure the file directory is created.
+      #    path: /pw/data/clickhouse
+      #    type: DirectoryOrCreate
+      - name: zookeeper
+        configMap:
+          name: iond-clickhouse-configmap
+          items:
+          - key: zookeeper.xml
+            path: zookeeper.xml
+      - name: shard
+        configMap:
+          name: iond-clickhouse-configmap
+          items:
+          - key: shard.xml
+            path: shard.xml

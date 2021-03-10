@@ -9,13 +9,15 @@ services:
       - 8123:8123
       - 9000:9000
     user: root:root
+    depends_on:
+      - zookeeper
 
   zookeeper:
     build:
       context: ./apps/zookeeper
       dockerfile: Dockerfile
-    container_name: zookeeper-0
-    hostname: zookeeper-0
+    container_name: zookeeper
+    hostname: zookeeper
     command: /script/init.sh
     ports:
       - 2181:2181

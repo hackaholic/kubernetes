@@ -48,7 +48,7 @@ spec:
       hostname: zookeeper
       containers:
       - name: zookeeper
-        image: 10.60.174.46:5000/kubernetes_zookeeper:latest 
+        image: 10.60.174.184:5000/kubernetes_zookeeper:latest 
         imagePullPolicy: Always
         #command: ["sleep", "100000000000"]
         ports:
@@ -64,16 +64,16 @@ spec:
         env:
         - name: "ZOO_SERVERS"
           value: "server.1=zookeeper-0.zookeeper.test.svc.cluster.local:2888:3888;2181 server.2=zookeeper-1.zookeeper.test.svc.cluster.local:2888:3888;2181"
-        #readinessProbe:
-        #  tcpSocket:
-        #    port: client
-        #  initialDelaySeconds: 20
-        #  periodSeconds: 20
-        #livenessProbe:
-        #  tcpSocket:
-        #    port: client
-        #  initialDelaySeconds: 20
-        #  periodSeconds: 20
+        readinessProbe:
+          tcpSocket:
+            port: client
+          initialDelaySeconds: 20
+          periodSeconds: 20
+        livenessProbe:
+          tcpSocket:
+            port: client
+          initialDelaySeconds: 20
+          periodSeconds: 20
 
         volumeMounts:
         - mountPath: /opt/zookeeper-3.4.13/data
