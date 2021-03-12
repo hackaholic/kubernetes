@@ -61,17 +61,17 @@ spec:
         - name: replica
           containerPort: 9009
           protocol: TCP
-        #startupProbe:
-        #  tcpSocket:
-        #    port: http-client
-        #  failureThreshold: 50
-        #  initialDelaySeconds: 20
-        #  periodSeconds: 20
-        #livenessProbe:
-        #  tcpSocket:
-        #    port: http-client
-        #  initialDelaySeconds: 20
-        #  periodSeconds: 20
+        startupProbe:
+          tcpSocket:
+            port: http-client
+          failureThreshold: 50
+          initialDelaySeconds: 20
+          periodSeconds: 20
+        livenessProbe:
+          tcpSocket:
+            port: http-client
+          initialDelaySeconds: 20
+          periodSeconds: 20
         volumeMounts:
         #- mountPath: /opt/clickhouse-3.4.13/data
         #  name: data
@@ -81,6 +81,9 @@ spec:
         - name: shard
           mountPath: /etc/clickhouse-server/config.d/shard.xml
           subPath: shard.xml
+        - name: macros
+          mountPath: /etc/clickhouse-server/config.d/macros.xml
+          subPath: macros.xml
 
       volumes:
       #- name: data
@@ -90,13 +93,19 @@ spec:
       #    type: DirectoryOrCreate
       - name: zookeeper
         configMap:
-          name: iond-clickhouse-configmap
+          name: test-clickhouse-configmap
           items:
           - key: zookeeper.xml
             path: zookeeper.xml
       - name: shard
         configMap:
-          name: iond-clickhouse-configmap
+          name: test-clickhouse-configmap
           items:
           - key: shard.xml
             path: shard.xml
+      - name: macros
+        configMap:
+          name: test-clickhouse-configmap
+          items:
+          - key: macros.xml
+            path: macros.xml
