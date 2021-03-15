@@ -1,5 +1,6 @@
 #!/bin/bash
 id=$(($(hostname | grep -Po "\d+") + 1))
+id=${1:-$id}
 echo "Zookeeper id: $id"
 echo $id > /data/myid
 echo "4lw.commands.whitelist=*" >> /conf/zoo.cfg

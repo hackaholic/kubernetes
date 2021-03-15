@@ -1,0 +1,7 @@
+<yandex>
+  <macros>
+    <cluster>test_shard</cluster>
+    <shard>snum</shard>
+    <replica>rnum</replica>
+  </macros>
+</yandex>

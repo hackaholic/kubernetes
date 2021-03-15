@@ -5,6 +5,8 @@ services:
       context: ./apps/clickhouse
       dockerfile: Dockerfile
     container_name: clickhouse
+    hostname: clickhouse
+    command: ["/script/init.sh", "1"]
     ports:
       - 8123:8123
       - 9000:9000
@@ -18,7 +20,7 @@ services:
       dockerfile: Dockerfile
     container_name: zookeeper
     hostname: zookeeper
-    command: /script/init.sh
+    command: ["/script/init.sh", "1"]
     ports:
       - 2181:2181
     user: root:root  

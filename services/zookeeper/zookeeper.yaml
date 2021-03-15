@@ -35,7 +35,7 @@ metadata:
      app: zookeeper
   namespace: test
 spec:
-  replicas: 2
+  replicas: 3
   selector:
     matchLabels:
       app: zookeeper
@@ -48,7 +48,8 @@ spec:
       hostname: zookeeper
       containers:
       - name: zookeeper
-        image: 10.60.174.184:5000/kubernetes_zookeeper:latest 
+        image: "{PW_IMAGE_REGISTRY}:5000/rt-monitoring_zookeeper:{test_commit_hash}"
+        #image: 10.60.174.184:5000/rt-monitoring_zookeeper:latest
         imagePullPolicy: Always
         #command: ["sleep", "100000000000"]
         ports:
@@ -63,7 +64,7 @@ spec:
           protocol: TCP
         env:
         - name: "ZOO_SERVERS"
-          value: "server.1=zookeeper-0.zookeeper.test.svc.cluster.local:2888:3888;2181 server.2=zookeeper-1.zookeeper.test.svc.cluster.local:2888:3888;2181"
+          value: "server.1=zookeeper-0.zookeeper.test.svc.cluster.local:2888:3888;2181 server.2=zookeeper-1.zookeeper.test.svc.cluster.local:2888:3888;2181 server.3=zookeeper-2.zookeeper.test.svc.cluster.local:2888:3888;2181"
         readinessProbe:
           tcpSocket:
             port: client

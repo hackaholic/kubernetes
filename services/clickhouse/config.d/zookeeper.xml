@@ -1,5 +1,5 @@
 <yandex>
-<zookeeper>
+  <zookeeper>
     <node index="1">
         <host>zookeeper-0.zookeeper.test.svc.cluster.local</host>
         <port>2181</port>
@@ -8,5 +8,9 @@
         <host>zookeeper-1.zookeeper.test.svc.cluster.local</host>
         <port>2181</port>
     </node>
-</zookeeper>
+    <node index="3">
+        <host>zookeeper-2.zookeeper.test.svc.cluster.local</host>
+        <port>2181</port>
+    </node>
+  </zookeeper>
 </yandex>

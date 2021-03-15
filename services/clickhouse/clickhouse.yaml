@@ -35,7 +35,7 @@ metadata:
      app: clickhouse
   namespace: test
 spec:
-  replicas: 2
+  replicas: 4
   selector:
     matchLabels:
       app: clickhouse
@@ -81,9 +81,6 @@ spec:
         - name: shard
           mountPath: /etc/clickhouse-server/config.d/shard.xml
           subPath: shard.xml
-        - name: macros
-          mountPath: /etc/clickhouse-server/config.d/macros.xml
-          subPath: macros.xml
 
       volumes:
       #- name: data
@@ -103,9 +100,3 @@ spec:
           items:
           - key: shard.xml
             path: shard.xml
-      - name: macros
-        configMap:
-          name: test-clickhouse-configmap
-          items:
-          - key: macros.xml
-            path: macros.xml

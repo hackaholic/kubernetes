@@ -33,11 +33,11 @@
             <weight>2</weight>
             <internal_replication>true</internal_replication>
             <replica>
-                <host>clickhouse-1.clickhouse.test.svc.cluster.local</host>
+                <host>clickhouse-2.clickhouse.test.svc.cluster.local</host>
                 <port>9000</port>
             </replica>
             <replica>
-                <host>clickhouse-0.clickhouse.test.svc.cluster.local</host>
+                <host>clickhouse-3.clickhouse.test.svc.cluster.local</host>
                 <port>9000</port>
             </replica>
         </shard>
